@@ -1,0 +1,9 @@
+
+import 'dart:ui';
+
+class LightColors {
+
+  static const Color primaryColor = Color(0XFFC53030);
+  static const Color backgroundColor = Color(0XFFF6F7F9);
+
+}
