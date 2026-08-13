@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
 
-  bool isVisible = false ;
+  bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontSize: 20,
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 24),
               CustomTextFormField(
                 controller: emailController,
                 title: "Email",
@@ -74,23 +69,32 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: passwordController,
                 title: 'Password',
                 hintText: '*************',
-                suffix: IconButton(
-                  onPressed: () {setState(() {
-                    isVisible = !isVisible ;
-                  });},
-                  icon: isVisible ?
-                  Icon(Icons.visibility):Icon(Icons.visibility_off),
-                ),
+                obscureText: true,
               ),
               SizedBox(height: 20),
               Center(
-                child: ElevatedButton(
-                  onPressed: () {
-
-                  },
-                  child: Text("Sign In"),
-                  // ElevatedButton.styleFrom()
+                child: SizedBox(
+                  height: 48,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text("Sign In"),
+                  ),
                 ),
+              ),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: .center,
+                children: [
+                  Text("Don’t have an account ?"),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

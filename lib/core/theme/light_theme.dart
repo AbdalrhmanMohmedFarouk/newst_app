@@ -7,6 +7,7 @@ ThemeData lightTheme = ThemeData(
   colorScheme: ColorScheme.light(
   ),
   scaffoldBackgroundColor: Color(0XFFf5f5f5),
+  primaryColor: LightColors.primaryColor,
   appBarTheme: AppBarTheme(
     backgroundColor: Color(0xFFFFFFFF),),
   ////   titleTextStyle: TextStyle(
