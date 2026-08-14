@@ -7,6 +7,7 @@ import 'package:newst_app/features/splash/splash_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await PreferencesManger().init();
+  // PreferencesManger().clear();
 
   runApp(const MyApp());
 

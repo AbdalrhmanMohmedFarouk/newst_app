@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/datasource/preferences_manger.dart';
-import 'package:newst_app/features/home/home_screen.dart';
+
 import 'package:newst_app/features/auth/login_screen.dart';
 import 'package:newst_app/features/onboarding/onboarding_screen.dart';
 
@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return HomeScreen();
+            return LoginScreen();
           },
         ),
       );
