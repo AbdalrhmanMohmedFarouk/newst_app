@@ -1,16 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:newst_app/core/datasource/preferences_manger.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 import 'package:newst_app/features/auth/register_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+import 'package:newst_app/features/main/main_screen.dart';
 
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
+
   final GlobalKey<FormState> _form = GlobalKey();
 
   bool isVisible = false;
+  String? errorMessage;
+  bool isLoading = false;
+
+  void login() async {
+    setState(() {
+      errorMessage = null;
+      isLoading = true;
+    });
+
+    await Future.delayed(Duration(seconds: 2));
+
+    final savedEmail = PreferencesManger().getString("user_email");
+    final savedPassword = PreferencesManger().getString("user_password");
+
+    if (savedEmail == null || savedPassword == null) {
+      setState(() {
+        errorMessage = "No Account Found Please Register First";
+        isLoading=false;
+      });
+      return;
+    }
+    if(savedEmail != emailController.text || savedPassword != passwordController.text){
+      setState(() {
+        errorMessage = "Incorrect Email or Password";
+        isLoading=false;
+      });
+      return;
+    }
+
+    setState(() {
+      errorMessage = null ;
+      isLoading=false;
+    });
+
+    await PreferencesManger().setBool("is_logged_in", true);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return MainScreen();
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +106,7 @@ class LoginScreen extends StatelessWidget {
                       return 'Email is required';
                     }
 
-                    final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                    final regex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
 
                     if (!regex.hasMatch(value)) {
                       return 'Enter a valid email';
@@ -77,6 +130,11 @@ class LoginScreen extends StatelessWidget {
                   },
                   obscureText: true,
                 ),
+                if(errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Text(errorMessage!,style: TextStyle(color: Colors.red),),
+                  ),
                 SizedBox(height: 20),
                 Center(
                   child: SizedBox(
@@ -84,9 +142,11 @@ class LoginScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_form.currentState?.validate() ?? false) {}
+                        if (_form.currentState?.validate() ?? false) {
+                          login();
+                        }
                       },
-                      child: Text("Sign In"),
+                      child:isLoading ? CircularProgressIndicator(): Text("Sign In"),
                     ),
                   ),
                 ),

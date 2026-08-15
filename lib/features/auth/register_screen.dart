@@ -3,6 +3,8 @@ import 'package:newst_app/core/datasource/preferences_manger.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 import 'package:newst_app/features/home/home_screen.dart';
 
+import '../main/main_screen.dart';
+
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
 
@@ -47,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) {
-            return HomeScreen();
+            return MainScreen();
           },
         ),
         (route) => false,
