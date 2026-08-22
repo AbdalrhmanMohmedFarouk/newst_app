@@ -20,6 +20,7 @@ class ApiService {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } catch (e) {
       throw Exception("Failed to load Data ");
+
     }
   }
 }
