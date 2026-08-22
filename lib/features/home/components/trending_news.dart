@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newst_app/core/enums/request_status_enum.dart';
 import 'package:newst_app/core/theme/light_color.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
 import 'package:provider/provider.dart';
@@ -72,40 +73,42 @@ class TrendingNews extends StatelessWidget {
                           HomeController controller,
                           Widget? child,
                         ) {
-                          return (controller.errorMessage?.isNotEmpty ?? false)
-                              ? Center(child: Text(controller.errorMessage!))
-                              : controller.everythingLoading
-                              ? Center(child: CircularProgressIndicator())
-                              : ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount:
-                                      controller.newsEverythingList.length,
-                                  separatorBuilder:
-                                      (BuildContext context, int index) {
-                                        return SizedBox(width: 12);
-                                      },
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
+                          switch (controller.everythingStatus) {
+                            case RequestStatusEnum.loading:
+                              return Center(child: CircularProgressIndicator());
+
+                            case RequestStatusEnum.error:
+                              return Center(
+                                child: Text(controller.errorMessage!),
+                              );
+                            case RequestStatusEnum.loaded:
+                              return ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: controller.newsEverythingList.length,
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                      return SizedBox(width: 12);
+                                    },
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Stack(
+                                      children: [
+                                        if (controller
+                                                .newsEverythingList[index]
+                                                .urlToImage !=
+                                            null)
+                                          Image.network(
+                                            controller
+                                                .newsEverythingList[index]
+                                                .urlToImage!,
                                           ),
-                                          child: Stack(
-                                            children: [
-                                              if (controller
-                                                      .newsEverythingList[index]
-                                                      .urlToImage !=
-                                                  null)
-                                                Image.network(
-                                                  controller
-                                                      .newsEverythingList[index]
-                                                      .urlToImage!,
-                                                ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                );
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                          }
                         },
                   ),
                 ),
