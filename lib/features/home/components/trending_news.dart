@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/enums/request_status_enum.dart';
 import 'package:newst_app/core/theme/light_color.dart';
+import 'package:newst_app/features/home/components/view_all_components.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -13,12 +14,12 @@ class TrendingNews extends StatelessWidget {
     final diff = DateTime.now().difference(DateTime.parse(data));
 
     if (diff.inMinutes < 60) {
-      return "${diff.inMinutes}";
+      return "${diff.inMinutes}m ago";
     }
     if (diff.inHours < 24) {
-      return "${diff.inHours}";
+      return "${diff.inHours}h ago";
     }
-    return "${diff.inDays}";
+    return "${diff.inDays}d ago";
   }
 
   @override
@@ -47,36 +48,7 @@ class TrendingNews extends StatelessWidget {
                     color: LightColors.primaryColor,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: .spaceBetween,
-                    children: [
-                      Text(
-                        "Trending News",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFFFFCFC),
-                        ),
-                      ),
-                      SizedBox(height: 6),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "View all",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFFFFFCFC),
-                            decoration: TextDecoration.underline,
-                            decorationColor: Color(0xFFFFFCFC),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ViewAllComponents(title: "Trending News",onTap: (){},),
                 SizedBox(height: 16),
                 SizedBox(
                   height: 140,
@@ -191,7 +163,9 @@ class TrendingNews extends StatelessWidget {
                                                       ),
                                                     ),
                                                     Text(
-                                                      model.publishedAt ?? "",
+                                                      formateDateTime(
+                                                        model.publishedAt,
+                                                      ),
                                                       style: TextStyle(
                                                         color: Color(
                                                           0xFFFFFCFC,

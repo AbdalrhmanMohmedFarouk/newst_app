@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/theme/light_color.dart';
 import 'package:newst_app/features/home/components/trending_news.dart';
+import 'package:newst_app/features/home/components/view_all_components.dart';
 
 import 'package:newst_app/features/home/models/home_controller.dart';
 
@@ -15,7 +16,11 @@ class HomeScreen extends StatelessWidget {
       create: (BuildContext context) => HomeController(),
       child: Consumer<HomeController>(
         builder: (BuildContext context, controller, Widget? child) {
-          return Scaffold(body: Column(children: [TrendingNews()]));
+          return Scaffold(body: Column(children: [TrendingNews(),
+
+          ViewAllComponents(title: "Category",titleColor: Color(0xFF141414),onTap: (){},),
+
+          ]));
         },
       ),
     );
