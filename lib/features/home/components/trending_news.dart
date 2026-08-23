@@ -7,6 +7,20 @@ import 'package:provider/provider.dart';
 class TrendingNews extends StatelessWidget {
   const TrendingNews({super.key});
 
+  String formateDateTime(String? data) {
+    if (data == null) return "";
+
+    final diff = DateTime.now().difference(DateTime.parse(data));
+
+    if (diff.inMinutes < 60) {
+      return "${diff.inMinutes}";
+    }
+    if (diff.inHours < 24) {
+      return "${diff.inHours}";
+    }
+    return "${diff.inDays}";
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -83,27 +97,117 @@ class TrendingNews extends StatelessWidget {
                               );
                             case RequestStatusEnum.loaded:
                               return ListView.separated(
+                                padding: EdgeInsets.only(left: 16),
                                 scrollDirection: Axis.horizontal,
-                                itemCount: controller.newsEverythingList.length,
+                                itemCount: controller.newsEverythingList
+                                    .take(6)
+                                    .length,
                                 separatorBuilder:
                                     (BuildContext context, int index) {
                                       return SizedBox(width: 12);
                                     },
                                 itemBuilder: (BuildContext context, int index) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Stack(
-                                      children: [
-                                        if (controller
-                                                .newsEverythingList[index]
-                                                .urlToImage !=
-                                            null)
-                                          Image.network(
-                                            controller
-                                                .newsEverythingList[index]
-                                                .urlToImage!,
+                                  final model =
+                                      controller.newsEverythingList[index];
+                                  return SizedBox(
+                                    width: 240,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Stack(
+                                        children: [
+                                          if (model.urlToImage != null)
+                                            Image.network(
+                                              model.urlToImage!,
+                                              width: 240,
+                                              height: 140,
+                                            ),
+                                          Positioned.fill(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                  colors: [
+                                                    Colors.black.withValues(
+                                                      alpha: 0.5,
+                                                    ),
+                                                    Colors.black.withValues(
+                                                      alpha: 0.7,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                      ],
+                                          Positioned(
+                                            bottom: 12,
+                                            right: 12,
+                                            left: 12,
+                                            child: Column(
+                                              crossAxisAlignment: .start,
+                                              children: [
+                                                Text(
+                                                  model.title,
+                                                  style: TextStyle(
+                                                    color: Color(0xFFFFFCFC),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                  maxLines: 2,
+                                                ),
+                                                SizedBox(height: 6),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Row(
+                                                        children: [
+                                                          CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                  model
+                                                                      .urlToImage
+                                                                      .toString(),
+                                                                ),
+                                                            radius: 10,
+                                                          ),
+                                                          SizedBox(width: 6),
+                                                          Expanded(
+                                                            child: Text(
+                                                              model.author ??
+                                                                  "",
+                                                              style: TextStyle(
+                                                                color: Color(
+                                                                  0xFFFFFCFC,
+                                                                ),
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                              maxLines: 1,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      model.publishedAt ?? "",
+                                                      style: TextStyle(
+                                                        color: Color(
+                                                          0xFFFFFCFC,
+                                                        ),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
