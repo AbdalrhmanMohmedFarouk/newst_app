@@ -7,16 +7,17 @@ class ApiService {
   final String apiKey = "5496816d97ed43a58f6dd6ecf280dc35";
 
   Future<dynamic> get(String endPoint, {Map<String, dynamic>? params}) async {
-    var urlForTopHeadline = Uri.http(
+    var url = Uri.http(
       ApiConfig.baseUrl,
       "v2/$endPoint",
 
       {"apiKey": ApiConfig.apiKey, ...?params},
 
-      //    'https://newsapi.org/v2/$endPoint'
+      //    'https://newsapi.org/v2/$endPoint
     );
+    print(url);
     try {
-      final http.Response response = await http.get(urlForTopHeadline);
+      final http.Response response = await http.get(url);
       return jsonDecode(response.body) as Map<String, dynamic>;
     } catch (e) {
       throw Exception("Failed to load Data ");
