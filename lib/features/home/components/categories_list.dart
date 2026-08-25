@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/theme/light_color.dart';
+import 'package:newst_app/features/home/components/view_all_components.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -12,50 +13,59 @@ class CategoriesList extends StatelessWidget {
       child: Consumer<HomeController>(
         builder:
             (BuildContext context, HomeController controller, Widget? child) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
-                child: SizedBox(
-                  height: 35,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: categories.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 12);
-                    },
-                    padding: EdgeInsets.only(right: 16),
-                    itemBuilder: (BuildContext context, int index) {
-                      bool isSelected =
-                          categories[index] == controller.selectedCategory;
-                      return GestureDetector(
-                        onTap: () {
-                          controller.updateSelectedCategory(categories[index]);
-                        },
-                        child: IntrinsicWidth(
-                          child: Column(
-                            children: [
-                              Text(
-                                categories[index][0].toUpperCase() +
-                                    categories[index].substring(1),
-                                style: TextStyle(
-                                  color: Color(0xFF363636),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              if (isSelected) ...[
-                                SizedBox(height: 6),
-                                Container(
-                                  height: 2,
-                                  color: LightColors.primaryColor,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+              return Column(
+                children: [
+                  ViewAllComponents(
+                    title: "Category",
+                    titleColor: Color(0xFF141414),
+                    onTap: () {},
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
+                    child: SizedBox(
+                      height: 35,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(width: 12);
+                        },
+                        padding: EdgeInsets.only(right: 16),
+                        itemBuilder: (BuildContext context, int index) {
+                          bool isSelected =
+                              categories[index] == controller.selectedCategory;
+                          return GestureDetector(
+                            onTap: () {
+                              controller.updateSelectedCategory(categories[index]);
+                            },
+                            child: IntrinsicWidth(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    categories[index][0].toUpperCase() +
+                                        categories[index].substring(1),
+                                    style: TextStyle(
+                                      color: Color(0xFF363636),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  if (isSelected) ...[
+                                    SizedBox(height: 6),
+                                    Container(
+                                      height: 2,
+                                      color: LightColors.primaryColor,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
       ),
