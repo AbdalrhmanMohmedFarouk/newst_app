@@ -3,6 +3,7 @@ import 'package:newst_app/core/enums/request_status_enum.dart';
 import 'package:newst_app/core/extensions/data_time_extension.dart';
 import 'package:newst_app/core/theme/light_color.dart';
 import 'package:newst_app/core/widgets/custom_cached_network_image.dart';
+import 'package:newst_app/features/home/components/trending_news_shimmer.dart';
 import 'package:newst_app/features/home/components/view_all_components.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +52,7 @@ class TrendingNews extends StatelessWidget {
                       color: LightColors.primaryColor,
                     ),
                   ),
-                  ViewAllComponents(title: "Trending News",onTap: (){},),
+                  ViewAllComponents(title: "Trending News", onTap: () {}),
                   SizedBox(height: 16),
                   SizedBox(
                     height: 140,
@@ -64,8 +65,7 @@ class TrendingNews extends StatelessWidget {
                           ) {
                             switch (controller.everythingStatus) {
                               case RequestStatusEnum.loading:
-                                return Center(child: CircularProgressIndicator());
-      
+                                return TrendingNewsShimmer();
                               case RequestStatusEnum.error:
                                 return Center(
                                   child: Text(controller.errorMessage!),
@@ -91,9 +91,10 @@ class TrendingNews extends StatelessWidget {
                                         child: Stack(
                                           children: [
                                             CustomCachedNetworkImage(
-                                                width: 240,
-                                                height: 140,
-                                                imagePath: model.urlToImage??""),
+                                              width: 240,
+                                              height: 140,
+                                              imagePath: model.urlToImage ?? "",
+                                            ),
                                             Positioned.fill(
                                               child: Container(
                                                 decoration: BoxDecoration(
@@ -124,7 +125,8 @@ class TrendingNews extends StatelessWidget {
                                                     style: TextStyle(
                                                       color: Color(0xFFFFFCFC),
                                                       fontSize: 14,
-                                                      fontWeight: FontWeight.w700,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                     ),
                                                     maxLines: 2,
                                                   ),
@@ -164,7 +166,8 @@ class TrendingNews extends StatelessWidget {
                                                         ),
                                                       ),
                                                       Text(
-                                                        model.publishedAt.formateDateTime(),
+                                                        model.publishedAt
+                                                            .formateDateTime(),
                                                         style: TextStyle(
                                                           color: Color(
                                                             0xFFFFFCFC,

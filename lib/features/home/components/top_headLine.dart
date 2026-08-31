@@ -24,9 +24,9 @@ class TopHeadline extends StatelessWidget {
               child: Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: 
-                    CustomCachedNetworkImage(imagePath: model.urlToImage??"")
+                      borderRadius: BorderRadius.circular(8),
+                      child:
+                      CustomCachedNetworkImage(imagePath: model.urlToImage??"")
 
                     // Image.network(
                     //   model.urlToImage ?? "",
