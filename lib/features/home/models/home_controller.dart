@@ -6,7 +6,7 @@ import '../../../core/datasource/remote_data/api_service.dart';
 import 'news_article_model.dart';
 
 class HomeController extends ChangeNotifier {
-  bool topHeadLineLoading = true;
+
 
   String? errorMessage;
 
@@ -23,6 +23,7 @@ class HomeController extends ChangeNotifier {
   }
 
   RequestStatusEnum everythingStatus = RequestStatusEnum.loading;
+  RequestStatusEnum newsTopHeadLineStatus = RequestStatusEnum.loading;
 
   Future<void> getTopHeadLine({String? category}) async {
     try {
@@ -34,10 +35,10 @@ class HomeController extends ChangeNotifier {
       newsTopHeadLineList = (result["articles"] as List)
           .map((e) => NewsArticleModel.fromJson(e))
           .toList();
-      topHeadLineLoading = false;
+      newsTopHeadLineStatus = RequestStatusEnum.loaded;
       errorMessage = null;
     } catch (e) {
-      topHeadLineLoading = false;
+      newsTopHeadLineStatus = RequestStatusEnum.error;
       errorMessage = e.toString();
     }
     notifyListeners();
