@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newst_app/core/enums/request_status_enum.dart';
 import 'package:newst_app/core/extensions/data_time_extension.dart';
 import 'package:newst_app/core/theme/light_color.dart';
+import 'package:newst_app/core/widgets/custom_cached_network_image.dart';
 import 'package:newst_app/features/home/components/view_all_components.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
 import 'package:provider/provider.dart';
@@ -89,12 +90,10 @@ class TrendingNews extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(12),
                                         child: Stack(
                                           children: [
-                                            if (model.urlToImage != null)
-                                              Image.network(
-                                                model.urlToImage!,
+                                            CustomCachedNetworkImage(
                                                 width: 240,
                                                 height: 140,
-                                              ),
+                                                imagePath: model.urlToImage??""),
                                             Positioned.fill(
                                               child: Container(
                                                 decoration: BoxDecoration(
