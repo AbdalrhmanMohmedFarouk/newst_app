@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/enums/request_status_enum.dart';
-
 import '../../../core/datasource/remote_data/api_config.dart';
 import '../../../core/datasource/remote_data/api_service.dart';
 import 'news_article_model.dart';

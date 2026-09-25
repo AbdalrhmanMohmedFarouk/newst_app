@@ -3,6 +3,7 @@ import 'package:newst_app/core/enums/request_status_enum.dart';
 import 'package:newst_app/core/extensions/data_time_extension.dart';
 import 'package:newst_app/core/theme/light_color.dart';
 import 'package:newst_app/core/widgets/custom_cached_network_image.dart';
+import 'package:newst_app/features/home/categories_screen.dart';
 import 'package:newst_app/features/home/components/trending_news_shimmer.dart';
 import 'package:newst_app/features/home/components/view_all_components.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
@@ -52,7 +53,7 @@ class TrendingNews extends StatelessWidget {
                       color: LightColors.primaryColor,
                     ),
                   ),
-                  ViewAllComponents(title: "Trending News", onTap: () {}),
+                  ViewAllComponents(title: "Trending News", onTap: () {CategoriesScreen();}),
                   SizedBox(height: 16),
                   SizedBox(
                     height: 140,

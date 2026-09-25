@@ -4,7 +4,7 @@ class ViewAllComponents extends StatelessWidget {
   const ViewAllComponents({super.key, required this.title, this.titleColor, required this.onTap});
 final String title ;
  final Color? titleColor;
- final Function onTap;
+ final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,7 +22,7 @@ final String title ;
           ),
           SizedBox(height: 6),
           InkWell(
-            onTap: ()=>(),
+            onTap: onTap,
               child: Text(
                 "View all",
                 style: TextStyle(

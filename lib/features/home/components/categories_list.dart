@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/theme/light_color.dart';
+import 'package:newst_app/features/home/categories_screen.dart';
 import 'package:newst_app/features/home/components/view_all_components.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,17 @@ class CategoriesList extends StatelessWidget {
                   ViewAllComponents(
                     title: "Category",
                     titleColor: Color(0xFF141414),
-                    onTap: () {},
+                    onTap: () {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return CategoriesScreen();
+                          },
+                        ),
+                      );
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
@@ -36,7 +47,9 @@ class CategoriesList extends StatelessWidget {
                               categories[index] == controller.selectedCategory;
                           return GestureDetector(
                             onTap: () {
-                              controller.updateSelectedCategory(categories[index]);
+                              controller.updateSelectedCategory(
+                                categories[index],
+                              );
                             },
                             child: IntrinsicWidth(
                               child: Column(
