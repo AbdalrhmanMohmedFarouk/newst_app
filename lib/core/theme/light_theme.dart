@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newst_app/core/constants/app_sizes.dart';
 import 'package:newst_app/core/theme/light_color.dart';
 
 ThemeData lightTheme = ThemeData(
@@ -55,8 +56,9 @@ ThemeData lightTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: LightColors.primaryColor,
       foregroundColor: Color(0xFFFFFCFC),
-      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+      textStyle: TextStyle(fontSize:  AppSizes.fontSize(16), fontWeight: FontWeight.w400),
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.zero),
+      minimumSize: Size.fromHeight( AppSizes.sizeH(52))
     ),
   ),
   textButtonTheme: TextButtonThemeData(
