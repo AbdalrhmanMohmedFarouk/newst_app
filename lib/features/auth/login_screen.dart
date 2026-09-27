@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newst_app/core/constants/app_sizes.dart';
 import 'package:newst_app/core/datasource/preferences_manger.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 import 'package:newst_app/features/auth/register_screen.dart';
@@ -85,18 +86,18 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Image.asset("assets/images/logo.png", height: 45),
+                  child: Image.asset("assets/images/logo.png", height: AppSizes.sizeH(45)),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height:  AppSizes.sizeH(40)),
                 Text(
                   "Welcome to Newts",
                   style: TextStyle(
                     color: Color(0XFF363636),
                     fontWeight: FontWeight.w700,
-                    fontSize: 20,
+                    fontSize:  AppSizes.fontSize(20),
                   ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height:  AppSizes.sizeH(24)),
                 CustomTextFormField(
                   controller: emailController,
                   title: "Email",
@@ -116,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
 
-                SizedBox(height: 16),
+                SizedBox(height:  AppSizes.sizeH(16)),
                 CustomTextFormField(
                   controller: passwordController,
                   title: 'Password',
@@ -132,10 +133,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 if(errorMessage != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding:  EdgeInsets.symmetric(vertical:  AppSizes.sizeW(8)),
                     child: Text(errorMessage!,style: TextStyle(color: Colors.red),),
                   ),
-                SizedBox(height: 20),
+                SizedBox(height:  AppSizes.sizeH(20)),
                 Center(
                   child: SizedBox(
                     height: 48,
@@ -150,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height:  AppSizes.sizeH(24)),
                 Row(
                   mainAxisAlignment: .center,
                   children: [

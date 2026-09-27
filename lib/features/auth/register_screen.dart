@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:newst_app/core/constants/app_sizes.dart';
 import 'package:newst_app/core/datasource/preferences_manger.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
-import 'package:newst_app/features/home/home_screen.dart';
+
 
 import '../main/main_screen.dart';
 
@@ -69,7 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding:  EdgeInsets.all( AppSizes.sizeW(16)),
           child: Form(
             key: _formKey,
             child: Column(
@@ -77,18 +78,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Image.asset("assets/images/logo.png", height: 40),
+                  child: Image.asset("assets/images/logo.png", height:  AppSizes.sizeH(40)),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height:  AppSizes.sizeH(40)),
                 Text(
                   "Welcome to Newts",
                   style: TextStyle(
                     color: Color(0XFF363636),
                     fontWeight: FontWeight.w700,
-                    fontSize: 20,
+                    fontSize:  AppSizes.fontSize(20),
                   ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height:  AppSizes.sizeH(24)),
                 CustomTextFormField(
                   controller: emailController,
                   title: "Email",
@@ -107,7 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                SizedBox(height:  AppSizes.sizeH(16)),
                 CustomTextFormField(
                   controller: passwordController,
                   title: "Password",
@@ -127,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   obscureText: true,
                 ),
-                SizedBox(height: 16),
+                SizedBox(height:  AppSizes.sizeH(16)),
                 CustomTextFormField(
                   controller: confirmPasswordController,
                   title: "Confirm Password",
@@ -149,16 +150,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 if (errorMessage != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding:  EdgeInsets.symmetric(vertical:  AppSizes.sizeW(8)),
                     child: Text(
                       errorMessage!,
                       style: TextStyle(color: Colors.red),
                     ),
                   ),
-                SizedBox(height: 20),
+                SizedBox(height:  AppSizes.sizeH(20)),
                 SizedBox(
                   width: double.infinity,
-                  height: 48,
+                  height:  AppSizes.sizeH(48),
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
@@ -170,12 +171,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         : Text("Sign Up"),
                   ),
                 ),
-                SizedBox(height: 24),
+                SizedBox(height:  AppSizes.sizeH(24)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Have an account ?"),
-                    SizedBox(width: 8),
+                    SizedBox(width:  AppSizes.sizeW(8)),
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);

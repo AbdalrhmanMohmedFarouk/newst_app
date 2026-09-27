@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:newst_app/core/datasource/preferences_manger.dart';
 import 'package:newst_app/core/theme/light_theme.dart';
-import 'package:newst_app/features/home/home_screen.dart';
-import 'package:newst_app/features/home/models/home_controller.dart';
 
 import 'package:newst_app/features/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +24,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: lightTheme,
-      home: SplashScreen(),
+      home: ScreenUtilInit(
+        designSize: Size(375, 832),
+        minTextAdapt: true,
+        builder: (ctx,_){
+          return SplashScreen();
+        },
+      )
     );
   }
 }
