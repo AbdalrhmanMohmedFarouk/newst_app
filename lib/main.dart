@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:newst_app/core/datasource/preferences_manger.dart';
 import 'package:newst_app/core/theme/light_theme.dart';
-
 import 'package:newst_app/features/splash/splash_screen.dart';
-import 'package:provider/provider.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await PreferencesManger().init();
-  // PreferencesManger().clear();
 
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -20,17 +17,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: lightTheme,
-      home: ScreenUtilInit(
-        designSize: Size(375, 832),
-        minTextAdapt: true,
-        builder: (ctx,_){
-          return SplashScreen();
-        },
-      )
+    return ScreenUtilInit(
+      designSize: const Size(375, 832),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: lightTheme,
+          home: SplashScreen(),
+        );
+      },
     );
   }
 }
