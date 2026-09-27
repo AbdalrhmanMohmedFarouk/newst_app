@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newst_app/core/constants/app_sizes.dart';
 import 'package:newst_app/features/home/components/news_item.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
 import 'package:provider/provider.dart';
@@ -22,16 +23,19 @@ class CategoriesScreen extends StatelessWidget {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
+                padding:  EdgeInsets.fromLTRB(AppSizes.sizeW(16),
+                  AppSizes.sizeH(16),
+                  0,
+                  AppSizes.sizeH(16),),
                 child: SizedBox(
-                  height: 35,
+                  height:  AppSizes.sizeH(35),
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
                     separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 12);
+                      return SizedBox(width:  AppSizes.sizeW(12));
                     },
-                    padding: EdgeInsets.only(right: 16),
+                    padding: EdgeInsets.only(right:  AppSizes.sizeW(12)),
                     itemBuilder: (BuildContext context, int index) {
                       bool isSelected =
                           categories[index] == controller.selectedCategory;
@@ -47,14 +51,14 @@ class CategoriesScreen extends StatelessWidget {
                                     categories[index].substring(1),
                                 style: TextStyle(
                                   color: Color(0xFF363636),
-                                  fontSize: 16,
+                                  fontSize:  AppSizes.fontSize(16),
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
                               if (isSelected) ...[
-                                SizedBox(height: 6),
+                                SizedBox(height:  AppSizes.sizeH(6)),
                                 Container(
-                                  height: 2,
+                                  height:  AppSizes.sizeH(2),
                                   color: LightColors.primaryColor,
                                 ),
                               ],
