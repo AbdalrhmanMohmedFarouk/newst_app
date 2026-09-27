@@ -4,16 +4,19 @@ import 'package:newst_app/core/theme/light_color.dart';
 ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
-  colorScheme: ColorScheme.light(
-  ),
+  colorScheme: ColorScheme.light(),
   scaffoldBackgroundColor: Color(0XFFf5f5f5),
   primaryColor: LightColors.primaryColor,
   appBarTheme: AppBarTheme(
-    titleTextStyle: TextStyle(fontSize:16,fontWeight: FontWeight.w400 ,color: Color(0xFF141414)),
-    backgroundColor: Color(0xFFFFFFFF),),
-    progressIndicatorTheme: ProgressIndicatorThemeData(
-      color: Colors.white
+    titleTextStyle: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+      color: Color(0xFF141414),
     ),
+    backgroundColor: Color(0xFFFFFFFF),
+    centerTitle: true,
+  ),
+  progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.white),
   ////   titleTextStyle: TextStyle(
   ////     color: Color(0xFF161F1B),
   ////     fontSize: 20,
@@ -22,7 +25,7 @@ ThemeData lightTheme = ThemeData(
   ////   iconTheme: IconThemeData(color: Color(0xFF161F1B)),
   ////   centerTitle: true,
   //// ),  App bar theme on old
-    // switchTheme: SwitchThemeData(
+  // switchTheme: SwitchThemeData(
   //   trackColor: WidgetStateProperty.resolveWith((states) {
   //     if (states.contains(WidgetState.selected)) {
   //       return Color(0xFF15B86C);
@@ -52,13 +55,14 @@ ThemeData lightTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: LightColors.primaryColor,
       foregroundColor: Color(0xFFFFFCFC),
-      textStyle: TextStyle(fontSize: 16 ,fontWeight: FontWeight.w400 ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.zero)
+      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.zero),
     ),
   ),
   textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(foregroundColor: Color(0XFFC53030))
+    style: TextButton.styleFrom(foregroundColor: Color(0XFFC53030)),
   ),
+
   // floatingActionButtonTheme: FloatingActionButtonThemeData(
   //   backgroundColor: Color(0XFF15B86C),
   //   foregroundColor: Color(0XFFFFFCFC),
@@ -106,7 +110,6 @@ ThemeData lightTheme = ThemeData(
   //   labelLarge: TextStyle(color: Colors.black, fontSize: 24),
   //   labelMedium: TextStyle(color: Colors.black, fontSize: 16),
   // ),
-
   inputDecorationTheme: InputDecorationTheme(
     hintStyle: TextStyle(color: Color(0xFF9E9E9E)),
     filled: true,
@@ -116,7 +119,7 @@ ThemeData lightTheme = ThemeData(
       borderSide: BorderSide(color: Colors.red, width: 0.5),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius:BorderRadius.zero,
+      borderRadius: BorderRadius.zero,
       borderSide: BorderSide(color: Color(0xFFD1DAD6), width: 0.5),
     ),
     enabledBorder: InputBorder.none,
@@ -147,12 +150,10 @@ ThemeData lightTheme = ThemeData(
   //   selectionHandleColor: Colors.black,
   // ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    backgroundColor:  LightColors.backgroundColor,
+    backgroundColor: LightColors.backgroundColor,
     type: BottomNavigationBarType.fixed,
     unselectedItemColor: Color(0XFF363636),
     selectedItemColor: LightColors.primaryColor,
-    showUnselectedLabels:true ,
+    showUnselectedLabels: true,
   ),
-
-
 );

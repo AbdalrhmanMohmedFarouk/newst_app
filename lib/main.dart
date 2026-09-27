@@ -12,12 +12,7 @@ void main() async{
   await PreferencesManger().init();
   // PreferencesManger().clear();
 
-  runApp(ChangeNotifierProvider(
-
-      create: (BuildContext context) {
-        return HomeController();
-      },
-      child: const MyApp()));
+  runApp(const MyApp());
 
 }
 
