@@ -10,8 +10,10 @@ class HomeController extends ChangeNotifier {
 
   List<NewsArticleModel> newsEverythingList = [];
 
-  final BaseNewsRepository newsRepository ;
+  final BaseNewsRepository newsRepository;
+
   String? selectedCategory;
+  bool isDispose = false;
 
   HomeController(this.newsRepository) {
     getEverything();
@@ -24,7 +26,7 @@ class HomeController extends ChangeNotifier {
   Future<void> getTopHeadLine({String? category}) async {
     try {
       newsTopHeadLineStatus = RequestStatusEnum.loading;
-      notifyListeners();
+      notify();
 
       newsTopHeadLineList = await newsRepository.getTopHeadLine(
         selectedCategory: selectedCategory,
@@ -36,7 +38,7 @@ class HomeController extends ChangeNotifier {
       newsTopHeadLineStatus = RequestStatusEnum.error;
       errorMessage = e.toString();
     }
-    notifyListeners();
+    notify();
   }
 
   Future<void> getEverything() async {
@@ -48,12 +50,24 @@ class HomeController extends ChangeNotifier {
       everythingStatus = RequestStatusEnum.error;
       errorMessage = e.toString();
     }
-    notifyListeners();
+    notify();
   }
 
   void updateSelectedCategory(String category) {
     selectedCategory = category;
     getTopHeadLine(category: selectedCategory);
-    notifyListeners();
+    notify();
+  }
+
+  void notify() {
+    if (!isDispose) {
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    isDispose = true;
+    super.dispose();
   }
 }
