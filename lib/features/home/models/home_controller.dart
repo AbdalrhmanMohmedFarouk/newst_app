@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/enums/request_status_enum.dart';
-import '../../../core/datasource/remote_data/api_config.dart';
-import '../../../core/datasource/remote_data/api_service.dart';
+import 'package:newst_app/features/home/repos/news_repository.dart';
 import 'news_article_model.dart';
 
 class HomeController extends ChangeNotifier {
-
-
   String? errorMessage;
 
   List<NewsArticleModel> newsTopHeadLineList = [];
 
   List<NewsArticleModel> newsEverythingList = [];
 
-  ApiService apiService = ApiService();
+  final NewsRepository newsRepository ;
   String? selectedCategory;
 
-  HomeController() {
+  HomeController(this.newsRepository) {
     getEverything();
     getTopHeadLine();
   }
@@ -26,16 +23,13 @@ class HomeController extends ChangeNotifier {
 
   Future<void> getTopHeadLine({String? category}) async {
     try {
-       newsTopHeadLineStatus = RequestStatusEnum.loading;
-       notifyListeners();
-      Map<String, dynamic> result = await apiService.get(
-        ApiConfig.topHeadlines,
-        params: {"country": "us", "category": selectedCategory},
+      newsTopHeadLineStatus = RequestStatusEnum.loading;
+      notifyListeners();
+
+      newsTopHeadLineList = await newsRepository.getTopHeadLine(
+        selectedCategory: selectedCategory,
       );
 
-      newsTopHeadLineList = (result["articles"] as List)
-          .map((e) => NewsArticleModel.fromJson(e))
-          .toList();
       newsTopHeadLineStatus = RequestStatusEnum.loaded;
       errorMessage = null;
     } catch (e) {
@@ -47,14 +41,7 @@ class HomeController extends ChangeNotifier {
 
   Future<void> getEverything() async {
     try {
-      Map<String, dynamic> result = await apiService.get(
-        ApiConfig.everything,
-        params: {"q": "news"},
-      );
-
-      newsEverythingList = (result["articles"] as List)
-          .map((e) => NewsArticleModel.fromJson(e))
-          .toList();
+      newsEverythingList = await newsRepository.getEverything();
       everythingStatus = RequestStatusEnum.loaded;
       errorMessage = null;
     } catch (e) {

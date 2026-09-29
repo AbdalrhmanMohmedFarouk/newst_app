@@ -3,6 +3,14 @@ import 'package:http/http.dart' as http;
 import 'package:newst_app/core/datasource/remote_data/api_config.dart';
 
 class ApiService {
+
+  static final ApiService _instance = ApiService._();
+
+  ApiService._();
+  factory ApiService (){
+    return _instance;
+  }
+
   final String baseUrl = "newsapi.org";
   final String apiKey = "5496816d97ed43a58f6dd6ecf280dc35";
 
