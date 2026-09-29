@@ -2,9 +2,17 @@ import 'package:newst_app/core/datasource/remote_data/api_config.dart';
 import 'package:newst_app/core/datasource/remote_data/api_service.dart';
 import 'package:newst_app/features/home/models/news_article_model.dart';
 
-class NewsRepository {
-  ApiService apiService = ApiService();
+abstract class BaseNewsRepository{
+  Future<List<NewsArticleModel>> getTopHeadLine({String? selectedCategory = "general"});
+  Future<List<NewsArticleModel>> getEverything();
 
+}
+
+
+
+class NewsRepository extends BaseNewsRepository {
+  ApiService apiService = ApiService();
+  @override
   Future<List<NewsArticleModel>> getTopHeadLine({String? selectedCategory = "general"}) async {
     Map<String, dynamic> result = await apiService.get(
       ApiConfig.topHeadlines,
@@ -16,6 +24,7 @@ class NewsRepository {
         .toList();
   }
 
+  @override
   Future<List<NewsArticleModel>> getEverything()async{
 
     Map<String, dynamic> result = await apiService.get(

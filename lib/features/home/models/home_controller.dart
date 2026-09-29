@@ -10,7 +10,7 @@ class HomeController extends ChangeNotifier {
 
   List<NewsArticleModel> newsEverythingList = [];
 
-  final NewsRepository newsRepository ;
+  final BaseNewsRepository newsRepository ;
   String? selectedCategory;
 
   HomeController(this.newsRepository) {
