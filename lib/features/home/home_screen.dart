@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/datasource/remote_data/api_service.dart';
+import 'package:newst_app/core/repos/news_repository.dart';
 import 'package:newst_app/features/home/components/categories_list.dart';
 import 'package:newst_app/features/home/components/top_headLine.dart';
 import 'package:newst_app/features/home/components/trending_news.dart';
 import 'package:newst_app/features/home/models/home_controller.dart';
-import 'package:newst_app/features/home/repos/news_repository.dart';
+
 
 import 'package:provider/provider.dart';
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/enums/request_status_enum.dart';
-import 'package:newst_app/features/home/repos/news_repository.dart';
+import 'package:newst_app/core/mixins/safe_notify_mixin.dart';
+import 'package:newst_app/core/repos/news_repository.dart';
 import 'news_article_model.dart';
 
-class HomeController extends ChangeNotifier {
+class HomeController extends ChangeNotifier with SafeNotify{
   String? errorMessage;
 
   List<NewsArticleModel> newsTopHeadLineList = [];
@@ -13,7 +14,7 @@ class HomeController extends ChangeNotifier {
   final BaseNewsRepository newsRepository;
 
   String? selectedCategory;
-  bool isDispose = false;
+
 
   HomeController(this.newsRepository) {
     getEverything();
@@ -26,7 +27,7 @@ class HomeController extends ChangeNotifier {
   Future<void> getTopHeadLine({String? category}) async {
     try {
       newsTopHeadLineStatus = RequestStatusEnum.loading;
-      notify();
+      safeNotify();
 
       newsTopHeadLineList = await newsRepository.getTopHeadLine(
         selectedCategory: selectedCategory,
@@ -38,7 +39,7 @@ class HomeController extends ChangeNotifier {
       newsTopHeadLineStatus = RequestStatusEnum.error;
       errorMessage = e.toString();
     }
-    notify();
+    safeNotify();
   }
 
   Future<void> getEverything() async {
@@ -50,24 +51,14 @@ class HomeController extends ChangeNotifier {
       everythingStatus = RequestStatusEnum.error;
       errorMessage = e.toString();
     }
-    notify();
+    safeNotify();
   }
 
   void updateSelectedCategory(String category) {
     selectedCategory = category;
     getTopHeadLine(category: selectedCategory);
-    notify();
+    safeNotify();
   }
 
-  void notify() {
-    if (!isDispose) {
-      notifyListeners();
-    }
-  }
 
-  @override
-  void dispose() {
-    isDispose = true;
-    super.dispose();
-  }
 }
