@@ -102,7 +102,7 @@ class NewsItem extends StatelessWidget {
                         ],
                       ),
                     ),
-                    CustomSvgPicture.withoutColor(path: "assets/svg/Icon.svg"),
+                    CustomSvgPicture.withoutColor(path: "assets/svg/bockmark.svg"),
                   ],
                 ),
               ],
