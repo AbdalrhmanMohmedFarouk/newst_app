@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
@@ -22,133 +23,139 @@ class ProfileScreen extends StatelessWidget {
         return ProfileController()..getUserData();
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("Profile")),
-        body: Center(
-          child: Consumer<ProfileController>(
-            builder:
-                (
-                  BuildContext context,
-                  ProfileController controller,
-                  Widget? child,
-                ) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: AppSizes.sizeH(24),
-                      horizontal: AppSizes.sizeW(12),
-                    ),
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: .center,
-                        children: [
-                          SizedBox(height: 28),
-                          Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              CircleAvatar(
-                                radius: AppSizes.radius(60),
-                                backgroundImage: controller.selectedImage == null
-                                    ? AssetImage("assets/images/person.png")
-                                    : FileImage(
-                                        File(controller.selectedImage!.path),
-                                      ),
-
-                                backgroundColor: Colors.transparent,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showImageSourceDialog(context);
-                                },
-                                child: Container(
-                                  height: AppSizes.sizeH(45),
-                                  width: AppSizes.sizeW(45),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                      AppSizes.radius(90),
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    size: AppSizes.sizeH(25),
-                                  ),
-                                ),
-                              ),
-                            ],
+        appBar: AppBar(title: const Text("Profile")),
+        body: Consumer<ProfileController>(
+          builder: (
+              BuildContext context,
+              ProfileController controller,
+              Widget? child,
+              ) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: AppSizes.sizeH(24),
+                horizontal: AppSizes.sizeW(12),
+              ),
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: AppSizes.sizeH(28)),
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        CircleAvatar(
+                          radius: AppSizes.radius(60),
+                          backgroundImage:
+                          controller.selectedImage == null
+                              ? const AssetImage(
+                            "assets/images/person.png",
+                          )
+                              : FileImage(
+                            File(controller.selectedImage!.path),
                           ),
-                          SizedBox(height: AppSizes.sizeH(8)),
-                          Text(
-                            PreferencesManger().getString("username") ??
-                                "".toString(),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: AppSizes.fontSize(16),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showImageSourceDialog(context);
+                          },
+                          child: Container(
+                            height: AppSizes.sizeH(45),
+                            width: AppSizes.sizeW(45),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radius(90),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: AppSizes.sizeH(25),
                             ),
                           ),
-                          SizedBox(height: AppSizes.sizeH(36)),
-
-
-                          _buildProfileItem(
-                            "Personal Info",
-                            "assets/svg/personalinfo.svg",
-                                () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (BuildContext context) {
-                                  return ProfileInfoBottomSheet();
-                                },
-                              ).then((value) {
-                                controller.getUserData();
-                              });
-                            },
-                          ),
-                          _buildProfileItem(
-                            "Language",
-                            "assets/svg/language.svg",
-                            () {},
-                          ),
-                          _buildProfileItem(
-                            controller.countryName ?? "Country",
-                             "assets/svg/country.svg",
-                            () {
-                              showCountryPicker(
-                                context: context,
-                                onSelect: (Country country) {
-                                  controller.saveCountry(country);
-                                  print('Select country: ${country.displayName}');
-                                },
-                              );
-                            },
-                          ),
-                          _buildProfileItem(
-                            "Terms & Conditions",
-                            "assets/svg/terms&conditions.svg",
-                            () {},
-                          ),
-                          _buildProfileItem(
-                            "Logout",
-                            "assets/svg/logout.svg",
-                            () async {
-                              PreferencesManger().clear();
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return LoginScreen();
-                                  },
-                                ),
-                              );
-                            },
-                            color: LightColors.primaryColor,
-                            divider: false,
-                          ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: AppSizes.sizeH(8)),
+                    Text(
+                      PreferencesManger().getString("username") ?? "",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: AppSizes.fontSize(16),
                       ),
                     ),
-                  );
-                },
-          ),
+                    SizedBox(height: AppSizes.sizeH(36)),
+
+                    _buildProfileItem(
+                      "Personal Info",
+                      "assets/svg/personalinfo.svg",
+                          () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (BuildContext context) {
+                            return ProfileInfoBottomSheet();
+                          },
+                        ).then((value) {
+                          controller.getUserData();
+                        });
+                      },
+                    ),
+
+                    _buildProfileItem(
+                      "Language",
+                      "assets/svg/language.svg",
+                          () {},
+                    ),
+
+                    _buildProfileItem(
+                      controller.countryName ?? "Country",
+                      "assets/svg/country.svg",
+                          () {
+                        showCountryPicker(
+                          context: context,
+                          onSelect: (Country country) {
+                            controller.saveCountry(country);
+                            print(
+                              'Select country: ${country.displayName}',
+                            );
+                          },
+                        );
+                      },
+                    ),
+
+                    _buildProfileItem(
+                      "Terms & Conditions",
+                      "assets/svg/terms&conditions.svg",
+                          () {},
+                    ),
+
+                    _buildProfileItem(
+                      "Logout",
+                      "assets/svg/logout.svg",
+                          () async {
+                        await PreferencesManger().clear();
+
+                        if (!context.mounted) return;
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return LoginScreen();
+                            },
+                          ),
+                        );
+                      },
+                      color: LightColors.primaryColor,
+                      divider: false,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -157,6 +164,7 @@ class ProfileScreen extends StatelessWidget {
 
 void showImageSourceDialog(BuildContext context) {
   final controller = context.read<ProfileController>();
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -180,11 +188,16 @@ void showImageSourceDialog(BuildContext context) {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.camera_alt, size: AppSizes.radius(20)),
+                  Icon(
+                    Icons.camera_alt,
+                    size: AppSizes.radius(20),
+                  ),
                   SizedBox(width: AppSizes.sizeW(5)),
                   Text(
                     "Open Camera",
-                    style: TextStyle(fontSize: AppSizes.fontSize(12)),
+                    style: TextStyle(
+                      fontSize: AppSizes.fontSize(12),
+                    ),
                   ),
                 ],
               ),
@@ -204,11 +217,16 @@ void showImageSourceDialog(BuildContext context) {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.photo_library, size: AppSizes.radius(20)),
+                  Icon(
+                    Icons.photo_library,
+                    size: AppSizes.radius(20),
+                  ),
                   SizedBox(width: AppSizes.sizeW(5)),
                   Text(
                     "Choose From Gallery",
-                    style: TextStyle(fontSize: AppSizes.fontSize(12)),
+                    style: TextStyle(
+                      fontSize: AppSizes.fontSize(12),
+                    ),
                   ),
                 ],
               ),
@@ -221,12 +239,12 @@ void showImageSourceDialog(BuildContext context) {
 }
 
 Widget _buildProfileItem(
-  String title,
-  String path,
-  Function onTap, {
-  Color color = const Color(0xFF161F1B),
-  bool divider = true,
-}) {
+    String title,
+    String path,
+    Function onTap, {
+      Color color = const Color(0xFF161F1B),
+      bool divider = true,
+    }) {
   return Column(
     children: [
       ListTile(
@@ -244,8 +262,13 @@ Widget _buildProfileItem(
           height: AppSizes.sizeH(16),
           width: AppSizes.sizeW(16),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.sizeH(8)),
-        trailing: Icon(Icons.arrow_forward_ios, color: color),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: AppSizes.sizeH(8),
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: color,
+        ),
       ),
       if (divider) Divider(color: Colors.grey.shade300),
     ],
