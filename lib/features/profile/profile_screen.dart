@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
 import 'package:newst_app/core/datasource/preferences_manger.dart';
@@ -10,6 +10,8 @@ import 'package:newst_app/features/auth/login_screen.dart';
 import 'package:newst_app/features/profile/profile_controller.dart';
 import 'package:provider/provider.dart';
 
+import 'bottom_sheet/profile_info_bottom_sheet.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -17,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ProfileController>(
       create: (BuildContext context) {
-        return ProfileController();
+        return ProfileController()..getUserData();
       },
       child: Scaffold(
         appBar: AppBar(title: Text("Profile")),
@@ -34,92 +36,115 @@ class ProfileScreen extends StatelessWidget {
                       vertical: AppSizes.sizeH(24),
                       horizontal: AppSizes.sizeW(12),
                     ),
-                    child: Column(
-                      crossAxisAlignment: .center,
-                      children: [
-                        SizedBox(height: 28),
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            CircleAvatar(
-                              radius: AppSizes.radius(60),
-                              backgroundImage: controller.selectedImage == null
-                                  ? AssetImage("assets/images/person.png")
-                                  : FileImage(
-                                      File(controller.selectedImage!.path),
-                                    ),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: .center,
+                        children: [
+                          SizedBox(height: 28),
+                          Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              CircleAvatar(
+                                radius: AppSizes.radius(60),
+                                backgroundImage: controller.selectedImage == null
+                                    ? AssetImage("assets/images/person.png")
+                                    : FileImage(
+                                        File(controller.selectedImage!.path),
+                                      ),
 
-                              backgroundColor: Colors.transparent,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                showImageSourceDialog(context);
-                              },
-                              child: Container(
-                                height: AppSizes.sizeH(45),
-                                width: AppSizes.sizeW(45),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(
-                                    AppSizes.radius(90),
+                                backgroundColor: Colors.transparent,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showImageSourceDialog(context);
+                                },
+                                child: Container(
+                                  height: AppSizes.sizeH(45),
+                                  width: AppSizes.sizeW(45),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(
+                                      AppSizes.radius(90),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    size: AppSizes.sizeH(25),
                                   ),
                                 ),
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  size: AppSizes.sizeH(25),
-                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: AppSizes.sizeH(8)),
-                        Text(
-                          PreferencesManger().getString("username") ??
-                              "".toString(),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: AppSizes.fontSize(16),
+                            ],
                           ),
-                        ),
-                        SizedBox(height: AppSizes.sizeH(36)),
-                        _buildProfileItem(
-                          "Personal Info",
-                          "assets/svg/personalinfo.svg",
-                          () {},
-                        ),
-                        _buildProfileItem(
-                          "Language",
-                          "assets/svg/language.svg",
-                          () {},
-                        ),
-                        _buildProfileItem(
-                          "Country",
-                          "assets/svg/country.svg",
-                          () {},
-                        ),
-                        _buildProfileItem(
-                          "Terms & Conditions",
-                          "assets/svg/terms&conditions.svg",
-                          () {},
-                        ),
-                        _buildProfileItem(
-                          "Logout",
-                          "assets/svg/logout.svg",
-                          () async {
-                            PreferencesManger().clear();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
+                          SizedBox(height: AppSizes.sizeH(8)),
+                          Text(
+                            PreferencesManger().getString("username") ??
+                                "".toString(),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: AppSizes.fontSize(16),
+                            ),
+                          ),
+                          SizedBox(height: AppSizes.sizeH(36)),
+
+
+                          _buildProfileItem(
+                            "Personal Info",
+                            "assets/svg/personalinfo.svg",
+                                () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
                                 builder: (BuildContext context) {
-                                  return LoginScreen();
+                                  return ProfileInfoBottomSheet();
                                 },
-                              ),
-                            );
-                          },
-                          color: LightColors.primaryColor,
-                          divider: false,
-                        ),
-                      ],
+                              ).then((value) {
+                                controller.getUserData();
+                              });
+                            },
+                          ),
+                          _buildProfileItem(
+                            "Language",
+                            "assets/svg/language.svg",
+                            () {},
+                          ),
+                          _buildProfileItem(
+                            controller.countryName ?? "Country",
+                             "assets/svg/country.svg",
+                            () {
+                              showCountryPicker(
+                                context: context,
+                                onSelect: (Country country) {
+                                  controller.saveCountry(country);
+                                  print('Select country: ${country.displayName}');
+                                },
+                              );
+                            },
+                          ),
+                          _buildProfileItem(
+                            "Terms & Conditions",
+                            "assets/svg/terms&conditions.svg",
+                            () {},
+                          ),
+                          _buildProfileItem(
+                            "Logout",
+                            "assets/svg/logout.svg",
+                            () async {
+                              PreferencesManger().clear();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return LoginScreen();
+                                  },
+                                ),
+                              );
+                            },
+                            color: LightColors.primaryColor,
+                            divider: false,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

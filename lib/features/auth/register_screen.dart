@@ -103,7 +103,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
                         return null;
                       },
-                    ),CustomTextFormField(
+                    ),
+                    CustomTextFormField(
                       controller: emailController,
                       title: "Email",
                       hintText: "Abdalrhman@gmail.com",
