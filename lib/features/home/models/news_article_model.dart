@@ -1,5 +1,4 @@
 class NewsArticleModel {
-
   final String? author;
   final String title;
   final String? description;
@@ -25,7 +24,7 @@ class NewsArticleModel {
       'description': description,
       'url': url,
       'urlToImage': urlToImage,
-      'publishedAt': publishedAt,
+      'publishedAt': publishedAt.toIso8601String(),
       'content': content,
     };
   }
