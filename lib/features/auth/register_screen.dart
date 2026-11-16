@@ -14,12 +14,9 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController confirmPasswordController =
       TextEditingController();
-
   final TextEditingController usernameController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -27,23 +24,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? errorMessage;
   bool isLoading = false;
 
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    usernameController.dispose();
+    super.dispose();
+  }
+
   void register() async {
     setState(() {
       errorMessage = null;
       isLoading = true;
     });
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
 
     final error = await UserRepository().singUp(
-      email: emailController.text,
+      email: emailController.text.trim(),
       password: passwordController.text,
-      name: usernameController.text,
+      name: usernameController.text.trim(),
     );
 
     if (error != null) {
+      if (!mounted) return;
       setState(() {
-        errorMessage = "User Already Registered";
+        errorMessage = error;
         isLoading = false;
       });
       return;
@@ -51,11 +58,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     await PreferencesManger().setBool("is_logged_in", true);
 
+    if (!mounted) return;
+
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return MainScreen();
+          return const MainScreen();
         },
       ),
       (route) => false,
@@ -68,9 +77,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/background_image.png"),
+            fit: BoxFit.cover,
           ),
         ),
         child: Padding(
@@ -93,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Text(
                       "Welcome to Newts",
                       style: TextStyle(
-                        color: Color(0XFF363636),
+                        color: const Color(0XFF363636),
                         fontWeight: FontWeight.w700,
                         fontSize: AppSizes.fontSize(20),
                       ),
@@ -102,27 +112,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     CustomTextFormField(
                       controller: usernameController,
                       title: "User Name",
-                      hintText: "Abdalrhman Mohmed",
+                      hintText: "Enter your name",
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.trim().isEmpty) {
                           return 'Please enter User Name';
                         }
                         return null;
                       },
                     ),
+                    SizedBox(height: AppSizes.sizeH(16)),
                     CustomTextFormField(
                       controller: emailController,
                       title: "Email",
-                      hintText: "Abdalrhman@gmail.com",
+                      hintText: "example@gmail.com",
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.trim().isEmpty) {
                           return 'Email is required';
                         }
 
                         final regex =
                             RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-                        if (!regex.hasMatch(value)) {
+                        if (!regex.hasMatch(value.trim())) {
                           return 'Enter a valid email';
                         }
 
@@ -133,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     CustomTextFormField(
                       controller: passwordController,
                       title: "Password",
-                      hintText: "*************",
+                      hintText: "At least 8 characters",
                       validator: (value) {
                         final passwordRegex = RegExp(
                           r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!]).{8,}$',
@@ -144,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
 
                         if (!passwordRegex.hasMatch(value)) {
-                          return 'Password must contain 8 characters, uppercase, lowercase, number and special character';
+                          return 'Password must contain 8+ characters with uppercase, lowercase, number and special char';
                         }
 
                         return null;
@@ -155,18 +166,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     CustomTextFormField(
                       controller: confirmPasswordController,
                       title: "Confirm Password",
-                      hintText: "*************",
+                      hintText: "Re-enter your password",
                       validator: (value) {
-                        final passwordRegex = RegExp(
-                          r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!]).{8,}$',
-                        );
-
                         if (value == null || value.isEmpty) {
-                          return 'Password is required';
+                          return 'Please confirm your password';
                         }
 
-                        if (!passwordRegex.hasMatch(value)) {
-                          return 'Password must contain 8 characters, uppercase, lowercase, number and special character';
+                        if (value != passwordController.text) {
+                          return 'Passwords do not match';
                         }
 
                         return null;
@@ -180,7 +187,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         child: Text(
                           errorMessage!,
-                          style: TextStyle(color: Colors.red),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     SizedBox(height: AppSizes.sizeH(20)),
@@ -188,21 +198,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: double.infinity,
                       height: AppSizes.sizeH(48),
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            register();
-                          }
-                        },
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  register();
+                                }
+                              },
                         child: isLoading
-                            ? CircularProgressIndicator()
-                            : Text("Sign Up"),
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text("Sign Up"),
                       ),
                     ),
                     SizedBox(height: AppSizes.sizeH(24)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Have an account ?"),
+                        const Text("Have an account ?"),
                         SizedBox(width: AppSizes.sizeW(8)),
                         TextButton(
                           onPressed: () {

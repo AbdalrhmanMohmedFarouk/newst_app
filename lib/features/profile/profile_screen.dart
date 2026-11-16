@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,15 @@ class ProfileScreen extends StatelessWidget {
             ProfileController controller,
             Widget? child,
           ) {
-            return Padding(
+            final displayName = (controller.userName != null &&
+                    controller.userName!.trim().isNotEmpty)
+                ? controller.userName!
+                : (controller.userEmail != null &&
+                        controller.userEmail!.trim().isNotEmpty)
+                    ? controller.userEmail!.split('@').first
+                    : "User Name";
+
+            return SingleChildScrollView(
               padding: EdgeInsets.symmetric(
                 vertical: AppSizes.sizeH(24),
                 horizontal: AppSizes.sizeW(12),
@@ -63,38 +70,57 @@ class ProfileScreen extends StatelessWidget {
                             width: AppSizes.sizeW(45),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(
-                                AppSizes.radius(90),
-                              ),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
                             child: Icon(
                               Icons.camera_alt,
-                              size: AppSizes.sizeH(25),
+                              size: AppSizes.sizeH(22),
+                              color: const Color(0xFF141414),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: AppSizes.sizeH(8)),
+                    SizedBox(height: AppSizes.sizeH(12)),
                     Text(
-                      controller.userName ?? "",
+                      displayName,
                       style: TextStyle(
-                        color: Colors.black,
-                        fontSize: AppSizes.fontSize(16),
+                        color: const Color(0xFF141414),
+                        fontSize: AppSizes.fontSize(18),
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(height: AppSizes.sizeH(36)),
+                    if (controller.userEmail != null &&
+                        controller.userEmail!.trim().isNotEmpty) ...[
+                      SizedBox(height: AppSizes.sizeH(4)),
+                      Text(
+                        controller.userEmail!,
+                        style: TextStyle(
+                          color: const Color(0xFF6E7191),
+                          fontSize: AppSizes.fontSize(14),
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: AppSizes.sizeH(32)),
 
                     _buildProfileItem(
-                      "Personal Info",
-                      "assets/svg/personalinfo.svg",
-                      () {
+                      title: "Personal Info",
+                      path: "assets/svg/personalinfo.svg",
+                      onTap: () {
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
                           backgroundColor: Colors.transparent,
                           builder: (BuildContext context) {
-                            return ProfileInfoBottomSheet();
+                            return const ProfileInfoBottomSheet();
                           },
                         ).then((value) {
                           controller.getUserData();
@@ -103,38 +129,118 @@ class ProfileScreen extends StatelessWidget {
                     ),
 
                     _buildProfileItem(
-                      "Language",
-                      "assets/svg/language.svg",
-                      () {},
+                      title: "Language",
+                      path: "assets/svg/language.svg",
+                      onTap: () {},
                     ),
 
+                    // Enhanced Country Item
                     _buildProfileItem(
-                      controller.countryName ?? "Country",
-                      "assets/svg/country.svg",
-                      () {
+                      title: "Country",
+                      subtitle: controller.countryName != null
+                          ? controller.countryName!
+                          : "Select your country",
+                      path: "assets/svg/country.svg",
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (controller.countryFlag != null) ...[
+                            Text(
+                              controller.countryFlag!,
+                              style: TextStyle(
+                                fontSize: AppSizes.fontSize(20),
+                              ),
+                            ),
+                            SizedBox(width: AppSizes.sizeW(6)),
+                          ],
+                          if (controller.countryCode != null) ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSizes.sizeW(8),
+                                vertical: AppSizes.sizeH(2),
+                              ),
+                              decoration: BoxDecoration(
+                                color: LightColors.primaryColor
+                                    .withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radius(6),
+                                ),
+                              ),
+                              child: Text(
+                                controller.countryCode!,
+                                style: TextStyle(
+                                  fontSize: AppSizes.fontSize(12),
+                                  fontWeight: FontWeight.w700,
+                                  color: LightColors.primaryColor,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: AppSizes.sizeW(8)),
+                          ],
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                            color: Color(0xFF161F1B),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
                         showCountryPicker(
                           context: context,
+                          showPhoneCode: false,
+                          countryListTheme: CountryListThemeData(
+                            bottomSheetHeight:
+                                MediaQuery.of(context).size.height * 0.7,
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(AppSizes.radius(20)),
+                            ),
+                            inputDecoration: InputDecoration(
+                              hintText: 'Search country...',
+                              prefixIcon: const Icon(Icons.search),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: AppSizes.sizeW(16),
+                                vertical: AppSizes.sizeH(12),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radius(12),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radius(12),
+                                ),
+                                borderSide: const BorderSide(
+                                  color: LightColors.primaryColor,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                          ),
                           onSelect: (Country country) {
                             controller.saveCountry(country);
-                            print(
-                              'Select country: ${country.displayName}',
-                            );
                           },
                         );
                       },
                     ),
 
                     _buildProfileItem(
-                      "Terms & Conditions",
-                      "assets/svg/terms&conditions.svg",
-                      () {},
+                      title: "Terms & Conditions",
+                      path: "assets/svg/terms&conditions.svg",
+                      onTap: () {},
                     ),
 
                     _buildProfileItem(
-                      "Logout",
-                      "assets/svg/logout.svg",
-                      () async {
-                        await PreferencesManger().setBool("is_logged_in", false);
+                      title: "Logout",
+                      path: "assets/svg/logout.svg",
+                      color: LightColors.primaryColor,
+                      divider: false,
+                      onTap: () async {
+                        await PreferencesManger()
+                            .setBool("is_logged_in", false);
 
                         if (!context.mounted) return;
 
@@ -142,13 +248,11 @@ class ProfileScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {
-                              return LoginScreen();
+                              return const LoginScreen();
                             },
                           ),
                         );
                       },
-                      color: LightColors.primaryColor,
-                      divider: false,
                     ),
                   ],
                 ),
@@ -237,39 +341,53 @@ void showImageSourceDialog(BuildContext context) {
   );
 }
 
-Widget _buildProfileItem(
-  String title,
-  String path,
-  Function onTap, {
+Widget _buildProfileItem({
+  required String title,
+  required String path,
+  required VoidCallback onTap,
   Color color = const Color(0xFF161F1B),
   bool divider = true,
+  String? subtitle,
+  Widget? trailing,
 }) {
   return Column(
     children: [
       ListTile(
-        onTap: () => onTap(),
+        onTap: onTap,
         title: Text(
           title,
           style: TextStyle(
             fontSize: AppSizes.fontSize(16),
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             color: color,
           ),
         ),
+        subtitle: subtitle != null
+            ? Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: AppSizes.fontSize(13),
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF6E7191),
+                ),
+              )
+            : null,
         leading: CustomSvgPicture.withoutColor(
           path: path,
-          height: AppSizes.sizeH(16),
-          width: AppSizes.sizeW(16),
+          height: AppSizes.sizeH(18),
+          width: AppSizes.sizeW(18),
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: AppSizes.sizeH(8),
         ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          color: color,
-        ),
+        trailing: trailing ??
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: color,
+            ),
       ),
-      if (divider) Divider(color: Colors.grey.shade300),
+      if (divider) Divider(color: Colors.grey.shade200),
     ],
   );
 }

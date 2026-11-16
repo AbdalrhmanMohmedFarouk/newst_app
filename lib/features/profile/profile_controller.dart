@@ -9,6 +9,7 @@ class ProfileController extends ChangeNotifier with SafeNotify {
   XFile? selectedImage;
 
   String? userName;
+  String? userEmail;
 
   String? selectedCountry;
   String? countryName;
@@ -20,24 +21,30 @@ class ProfileController extends ChangeNotifier with SafeNotify {
     safeNotify();
   }
 
-  getUserData() async {
-    final UserModel? user = await UserRepository().getUser();
-    userName = user?.name ?? "";
+  void getUserData() {
+    final UserModel? user = UserRepository().getUser();
+    userName = user?.name;
+    userEmail = user?.email;
     countryName = user?.countryName;
     countryCode = user?.countryCode;
     countryFlag = user?.countryFlag;
     safeNotify();
   }
 
-  saveCountry(Country selectedCountry) async {
+  Future<void> saveCountry(Country selectedCountry) async {
+    final name = selectedCountry.name;
+    final code = selectedCountry.countryCode;
+    final flag = selectedCountry.flagEmoji;
+
     await UserRepository().updateUser(
-      countryName: selectedCountry.displayName,
-      countryCode: selectedCountry.countryCode,
-      countryFlag: selectedCountry.flagEmoji,
+      countryName: name,
+      countryCode: code,
+      countryFlag: flag,
     );
-    countryName = selectedCountry.displayName;
-    countryCode = selectedCountry.countryCode;
-    countryFlag = selectedCountry.flagEmoji;
+
+    countryName = name;
+    countryCode = code;
+    countryFlag = flag;
     safeNotify();
   }
 }

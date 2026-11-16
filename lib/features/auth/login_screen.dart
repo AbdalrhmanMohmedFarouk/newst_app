@@ -15,14 +15,18 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
-
   final GlobalKey<FormState> _form = GlobalKey();
 
-  bool isVisible = false;
   String? errorMessage;
   bool isLoading = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   void login() async {
     setState(() {
@@ -30,14 +34,15 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
 
     final String? error = UserRepository().login(
-      emailController.text,
+      emailController.text.trim(),
       passwordController.text,
     );
 
     if (error != null) {
+      if (!mounted) return;
       setState(() {
         errorMessage = error;
         isLoading = false;
@@ -47,11 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await PreferencesManger().setBool("is_logged_in", true);
 
+    if (!mounted) return;
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return MainScreen();
+          return const MainScreen();
         },
       ),
     );
@@ -63,9 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/background_image.png"),
+            fit: BoxFit.cover,
           ),
         ),
         child: Padding(
@@ -77,14 +85,16 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Image.asset("assets/images/logo.png",
-                      height: AppSizes.sizeH(45)),
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    height: AppSizes.sizeH(45),
+                  ),
                 ),
                 SizedBox(height: AppSizes.sizeH(40)),
                 Text(
                   "Welcome to Newts",
                   style: TextStyle(
-                    color: Color(0XFF363636),
+                    color: const Color(0XFF363636),
                     fontWeight: FontWeight.w700,
                     fontSize: AppSizes.fontSize(20),
                   ),
@@ -93,15 +103,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomTextFormField(
                   controller: emailController,
                   title: "Email",
-                  hintText: "dev@gmail.com",
+                  hintText: "example@gmail.com",
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.trim().isEmpty) {
                       return 'Email is required';
                     }
 
                     final regex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-                    if (!regex.hasMatch(value)) {
+                    if (!regex.hasMatch(value.trim())) {
                       return 'Enter a valid email';
                     }
 
@@ -117,7 +127,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Password is required';
                     }
-
                     return null;
                   },
                   obscureText: true,
@@ -128,7 +137,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         EdgeInsets.symmetric(vertical: AppSizes.sizeW(8)),
                     child: Text(
                       errorMessage!,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 SizedBox(height: AppSizes.sizeH(20)),
@@ -137,14 +149,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 48,
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_form.currentState?.validate() ?? false) {
-                          login();
-                        }
-                      },
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              if (_form.currentState?.validate() ?? false) {
+                                login();
+                              }
+                            },
                       child: isLoading
-                          ? CircularProgressIndicator()
-                          : Text("Sign In"),
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text("Sign In"),
                     ),
                   ),
                 ),
@@ -152,14 +173,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an account ?"),
+                    const Text("Don't have an account ?"),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {
-                              return RegisterScreen();
+                              return const RegisterScreen();
                             },
                           ),
                         );
