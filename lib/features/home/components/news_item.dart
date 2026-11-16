@@ -3,10 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
 import 'package:newst_app/core/extensions/data_time_extension.dart';
+import 'package:newst_app/core/theme/light_color.dart';
 import 'package:newst_app/core/widgets/custom_cached_network_image.dart';
 import 'package:newst_app/core/widgets/custom_svg_picture.dart';
+import 'package:newst_app/features/bookmark/bookmark_controller.dart';
 import 'package:newst_app/features/details/news_details_screen.dart';
 import 'package:newst_app/features/home/models/news_article_model.dart';
+import 'package:provider/provider.dart';
 
 class NewsItem extends StatelessWidget {
   const NewsItem({super.key, required this.model});
@@ -38,25 +41,12 @@ class NewsItem extends StatelessWidget {
               child: CustomCachedNetworkImage(
                 imagePath: model.urlToImage ?? "",
               ),
-
-              // Image.network(
-              //   model.urlToImage ?? "",
-              //   errorBuilder:(BuildContext context, Object error, StackTrace? stackTrace){
-              //     return Container(height: 80,
-              //       width: 140,
-              //     color:Colors.red ,
-              //     );
-              //   } ,
-              //   height: 80,
-              //   width: 140,
-              //   fit: BoxFit.cover,
-              // ),
             ),
             SizedBox(width: AppSizes.sizeW(8)),
             Expanded(
               child: Column(
-                mainAxisAlignment: .spaceBetween,
-                crossAxisAlignment: .start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     model.title,
@@ -89,7 +79,7 @@ class NewsItem extends StatelessWidget {
                                       min((model.author ?? "").length, 10),
                                     ),
                                     style: TextStyle(
-                                      color: Color(0xFF141414),
+                                      color: const Color(0xFF141414),
                                       fontSize: AppSizes.fontSize(12),
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -99,7 +89,7 @@ class NewsItem extends StatelessWidget {
                                   Text(
                                     model.publishedAt.formateDateTime(),
                                     style: TextStyle(
-                                      color: Color(0xFF141414),
+                                      color: const Color(0xFF141414),
                                       fontSize: AppSizes.fontSize(14),
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -110,8 +100,47 @@ class NewsItem extends StatelessWidget {
                           ],
                         ),
                       ),
-                      CustomSvgPicture.withoutColor(
-                        path: "assets/svg/bockmark.svg",
+                      Consumer<BookmarkController>(
+                        builder: (context, bookmarkController, child) {
+                          final isBookmarked =
+                              bookmarkController.isBookmarked(model);
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () async {
+                              final wasBookmarked = isBookmarked;
+                              await bookmarkController.toggleBookmark(model);
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      wasBookmarked
+                                          ? "Removed from bookmarks"
+                                          : "Saved to bookmarks",
+                                    ),
+                                    duration: const Duration(seconds: 1),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSizes.sizeW(4),
+                              ),
+                              child: isBookmarked
+                                  ? Icon(
+                                      Icons.bookmark,
+                                      color: LightColors.primaryColor,
+                                      size: AppSizes.sizeH(20),
+                                    )
+                                  : const CustomSvgPicture.withoutColor(
+                                      path: "assets/svg/bockmark.svg",
+                                    ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

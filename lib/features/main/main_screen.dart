@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:newst_app/core/theme/light_color.dart';
+import 'package:newst_app/features/bookmark/bookmark_controller.dart';
 import 'package:newst_app/features/bookmark/bookmark_screen.dart';
 import 'package:newst_app/features/home/home_screen.dart';
 import 'package:newst_app/features/profile/profile_screen.dart';
 import 'package:newst_app/features/search/search_screen.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -31,16 +34,61 @@ class _MainScreenState extends State<MainScreen> {
             _currentIndex = index;
           });
         },
-
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border),
-            label: "Bookmark",
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: "Home",
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            activeIcon: Icon(Icons.search),
+            label: "Search",
           ),
           BottomNavigationBarItem(
+            icon: Consumer<BookmarkController>(
+              builder: (context, controller, child) {
+                if (controller.bookmarks.isEmpty) {
+                  return const Icon(Icons.bookmark_border);
+                }
+                return Badge(
+                  backgroundColor: LightColors.primaryColor,
+                  label: Text(
+                    controller.bookmarks.length.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Icon(Icons.bookmark_border),
+                );
+              },
+            ),
+            activeIcon: Consumer<BookmarkController>(
+              builder: (context, controller, child) {
+                if (controller.bookmarks.isEmpty) {
+                  return const Icon(Icons.bookmark);
+                }
+                return Badge(
+                  backgroundColor: LightColors.primaryColor,
+                  label: Text(
+                    controller.bookmarks.length.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Icon(Icons.bookmark),
+                );
+              },
+            ),
+            label: "Bookmark",
+          ),
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
             label: "Profile",
           ),
         ],
