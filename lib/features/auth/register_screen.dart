@@ -5,8 +5,6 @@ import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 import 'package:newst_app/features/main/main_screen.dart';
 
-
-
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -20,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   final TextEditingController confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   final TextEditingController usernameController = TextEditingController();
 
@@ -37,29 +35,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     await Future.delayed(Duration(seconds: 2));
 
+    final error = await UserRepository().singUp(
+      email: emailController.text,
+      password: passwordController.text,
+      name: usernameController.text,
+    );
 
-    final error = await UserRepository().singUp(email: emailController.text, password: usernameController.text, name: passwordController.text);
-
-    if (error != null ) {
+    if (error != null) {
       setState(() {
         errorMessage = "User Already Registered";
         isLoading = false;
       });
       return;
     }
-      await PreferencesManger().setBool("is_logged_in", true);
 
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) {
-            return MainScreen();
-          },
-        ),
-            (route) => false,
-      );
-    }
+    await PreferencesManger().setBool("is_logged_in", true);
 
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return MainScreen();
+        },
+      ),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
 
                         final regex =
-                        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                            RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
                         if (!regex.hasMatch(value)) {
                           return 'Enter a valid email';

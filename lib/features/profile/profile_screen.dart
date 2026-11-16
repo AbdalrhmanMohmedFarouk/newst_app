@@ -26,10 +26,10 @@ class ProfileScreen extends StatelessWidget {
         appBar: AppBar(title: const Text("Profile")),
         body: Consumer<ProfileController>(
           builder: (
-              BuildContext context,
-              ProfileController controller,
-              Widget? child,
-              ) {
+            BuildContext context,
+            ProfileController controller,
+            Widget? child,
+          ) {
             return Padding(
               padding: EdgeInsets.symmetric(
                 vertical: AppSizes.sizeH(24),
@@ -45,14 +45,13 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: AppSizes.radius(60),
-                          backgroundImage:
-                          controller.selectedImage == null
+                          backgroundImage: controller.selectedImage == null
                               ? const AssetImage(
-                            "assets/images/person.png",
-                          )
+                                  "assets/images/person.png",
+                                )
                               : FileImage(
-                            File(controller.selectedImage!.path),
-                          ),
+                                  File(controller.selectedImage!.path),
+                                ),
                           backgroundColor: Colors.transparent,
                         ),
                         GestureDetector(
@@ -78,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     SizedBox(height: AppSizes.sizeH(8)),
                     Text(
-                      PreferencesManger().getString("username") ?? "",
+                      controller.userName ?? "",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: AppSizes.fontSize(16),
@@ -89,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                     _buildProfileItem(
                       "Personal Info",
                       "assets/svg/personalinfo.svg",
-                          () {
+                      () {
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -106,13 +105,13 @@ class ProfileScreen extends StatelessWidget {
                     _buildProfileItem(
                       "Language",
                       "assets/svg/language.svg",
-                          () {},
+                      () {},
                     ),
 
                     _buildProfileItem(
                       controller.countryName ?? "Country",
                       "assets/svg/country.svg",
-                          () {
+                      () {
                         showCountryPicker(
                           context: context,
                           onSelect: (Country country) {
@@ -128,14 +127,14 @@ class ProfileScreen extends StatelessWidget {
                     _buildProfileItem(
                       "Terms & Conditions",
                       "assets/svg/terms&conditions.svg",
-                          () {},
+                      () {},
                     ),
 
                     _buildProfileItem(
                       "Logout",
                       "assets/svg/logout.svg",
-                          () async {
-                        await PreferencesManger().clear();
+                      () async {
+                        await PreferencesManger().setBool("is_logged_in", false);
 
                         if (!context.mounted) return;
 
@@ -239,12 +238,12 @@ void showImageSourceDialog(BuildContext context) {
 }
 
 Widget _buildProfileItem(
-    String title,
-    String path,
-    Function onTap, {
-      Color color = const Color(0xFF161F1B),
-      bool divider = true,
-    }) {
+  String title,
+  String path,
+  Function onTap, {
+  Color color = const Color(0xFF161F1B),
+  bool divider = true,
+}) {
   return Column(
     children: [
       ListTile(

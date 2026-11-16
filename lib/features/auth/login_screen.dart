@@ -4,7 +4,6 @@ import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
 import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 import 'package:newst_app/features/auth/register_screen.dart';
-
 import 'package:newst_app/features/main/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,26 +32,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await Future.delayed(Duration(seconds: 2));
 
-    // final savedEmail = PreferencesManger().getString("user_email");
-    // final savedPassword = PreferencesManger().getString("user_password");
+    final String? error = UserRepository().login(
+      emailController.text,
+      passwordController.text,
+    );
 
-  final String?  error = UserRepository().login(emailController.text, passwordController.text);
-  if(error != null){
-    setState(() {
-      errorMessage = error;
-isLoading=false;
-    });
-    return ;
-  }
-
-
-    //
-    // setState(() {
-    //   errorMessage = null ;
-    //   isLoading=false;
-    // });
+    if (error != null) {
+      setState(() {
+        errorMessage = error;
+        isLoading = false;
+      });
+      return;
+    }
 
     await PreferencesManger().setBool("is_logged_in", true);
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -83,18 +77,19 @@ isLoading=false;
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Image.asset("assets/images/logo.png", height: AppSizes.sizeH(45)),
+                  child: Image.asset("assets/images/logo.png",
+                      height: AppSizes.sizeH(45)),
                 ),
-                SizedBox(height:  AppSizes.sizeH(40)),
+                SizedBox(height: AppSizes.sizeH(40)),
                 Text(
                   "Welcome to Newts",
                   style: TextStyle(
                     color: Color(0XFF363636),
                     fontWeight: FontWeight.w700,
-                    fontSize:  AppSizes.fontSize(20),
+                    fontSize: AppSizes.fontSize(20),
                   ),
                 ),
-                SizedBox(height:  AppSizes.sizeH(24)),
+                SizedBox(height: AppSizes.sizeH(24)),
                 CustomTextFormField(
                   controller: emailController,
                   title: "Email",
@@ -113,8 +108,7 @@ isLoading=false;
                     return null;
                   },
                 ),
-
-                SizedBox(height:  AppSizes.sizeH(16)),
+                SizedBox(height: AppSizes.sizeH(16)),
                 CustomTextFormField(
                   controller: passwordController,
                   title: 'Password',
@@ -128,12 +122,16 @@ isLoading=false;
                   },
                   obscureText: true,
                 ),
-                if(errorMessage != null)
+                if (errorMessage != null)
                   Padding(
-                    padding:  EdgeInsets.symmetric(vertical:  AppSizes.sizeW(8)),
-                    child: Text(errorMessage!,style: TextStyle(color: Colors.red),),
+                    padding:
+                        EdgeInsets.symmetric(vertical: AppSizes.sizeW(8)),
+                    child: Text(
+                      errorMessage!,
+                      style: TextStyle(color: Colors.red),
+                    ),
                   ),
-                SizedBox(height:  AppSizes.sizeH(20)),
+                SizedBox(height: AppSizes.sizeH(20)),
                 Center(
                   child: SizedBox(
                     height: 48,
@@ -144,15 +142,17 @@ isLoading=false;
                           login();
                         }
                       },
-                      child:isLoading ? CircularProgressIndicator(): Text("Sign In"),
+                      child: isLoading
+                          ? CircularProgressIndicator()
+                          : Text("Sign In"),
                     ),
                   ),
                 ),
-                SizedBox(height:  AppSizes.sizeH(24)),
+                SizedBox(height: AppSizes.sizeH(24)),
                 Row(
-                  mainAxisAlignment: .center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don’t have an account ?"),
+                    Text("Don't have an account ?"),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -166,7 +166,8 @@ isLoading=false;
                       },
                       child: Text(
                         "Sign Up",
-                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        style:
+                            TextStyle(color: Theme.of(context).primaryColor),
                       ),
                     ),
                   ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
-import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
 import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/models/user_model.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
@@ -21,16 +20,15 @@ class _ProfileInfoBottomSheetState extends State<ProfileInfoBottomSheet> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadUserData();
   }
 
   void _loadUserData() {
-    final UserModel user = UserRepository().getUser();
+    final UserModel? user = UserRepository().getUser();
 
-    usernameController.text = user.name ?? "";
-    emailController.text = user.email ?? "";
+    usernameController.text = user?.name ?? "";
+    emailController.text = user?.email ?? "";
   }
 
   void _saveUserData() async {

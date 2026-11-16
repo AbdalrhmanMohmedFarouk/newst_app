@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await PreferencesManger().init();
-   UserRepository().init();
+  await UserRepository().init();
 
   runApp(const MyApp());
 }

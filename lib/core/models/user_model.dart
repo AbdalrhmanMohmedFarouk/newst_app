@@ -38,11 +38,11 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      name: map['name'] as String,
-      email: map['email'] as String,
-      password: map['password'] as String,
-      countryName: map['countryName'] as String,
-      countryCode: map['countryCode'] as String,
+      name: map['name'] as String?,
+      email: map['email'] as String?,
+      password: map['password'] as String?,
+      countryName: map['countryName'] as String?,
+      countryCode: map['countryCode'] as String?,
       countryFlag: map['countryFlag'] as String?,
     );
   }

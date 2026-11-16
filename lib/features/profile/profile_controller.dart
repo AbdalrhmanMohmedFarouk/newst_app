@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/mixins/safe_notify_mixin.dart';
+import 'package:newst_app/core/models/user_model.dart';
 
 class ProfileController extends ChangeNotifier with SafeNotify {
   XFile? selectedImage;
@@ -20,7 +21,7 @@ class ProfileController extends ChangeNotifier with SafeNotify {
   }
 
   getUserData() async {
-    final user = await UserRepository().getUser();
+    final UserModel? user = await UserRepository().getUser();
     userName = user?.name ?? "";
     countryName = user?.countryName;
     countryCode = user?.countryCode;

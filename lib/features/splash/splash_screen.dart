@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
 import 'package:newst_app/features/auth/login_screen.dart';
-import 'package:newst_app/features/home/home_screen.dart';
 import 'package:newst_app/features/main/main_screen.dart';
 import 'package:newst_app/features/onboarding/onboarding_screen.dart';
 
@@ -19,15 +18,15 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigateAfterSplash();
   }
 
-  void _navigateAfterSplash()async {
-
+  void _navigateAfterSplash() async {
     await Future.delayed(Duration(seconds: 2));
 
     final bool onboardingComplete =
         PreferencesManger().getBool('onboarding_complete') ?? false;
     final bool isLoggedIn =
         PreferencesManger().getBool('is_logged_in') ?? false;
-    if(!mounted) return ;
+
+    if (!mounted) return;
     if (!onboardingComplete) {
       Navigator.pushReplacement(
         context,
