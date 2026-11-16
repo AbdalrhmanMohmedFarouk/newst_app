@@ -4,7 +4,7 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
 import 'package:newst_app/core/theme/light_color.dart';
 import 'package:newst_app/core/widgets/custom_svg_picture.dart';
 import 'package:newst_app/features/auth/login_screen.dart';

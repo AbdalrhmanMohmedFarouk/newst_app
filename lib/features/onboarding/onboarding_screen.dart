@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
 import 'package:newst_app/features/auth/login_screen.dart';
 import 'package:newst_app/features/onboarding/controller/onboarding_controller.dart';
 import 'package:provider/provider.dart';

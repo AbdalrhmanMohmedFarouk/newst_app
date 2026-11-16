@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/user_repository.dart';
+import 'package:newst_app/core/models/user_model.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 
 class ProfileInfoBottomSheet extends StatefulWidget {
@@ -25,14 +27,18 @@ class _ProfileInfoBottomSheetState extends State<ProfileInfoBottomSheet> {
   }
 
   void _loadUserData() {
-    usernameController.text = PreferencesManger().getString("username") ?? "";
-    emailController.text = PreferencesManger().getString("user_email") ?? "";
+    final UserModel user = UserRepository().getUser();
+
+    usernameController.text = user.name ?? "";
+    emailController.text = user.email ?? "";
   }
 
   void _saveUserData() async {
     if (_key.currentState?.validate() ?? false) {
-      await PreferencesManger().setString("username", usernameController.text);
-      await PreferencesManger().setString("user_email", emailController.text);
+      await UserRepository().updateUser(
+        name: usernameController.text,
+        email: emailController.text,
+      );
       Navigator.pop(context);
     }
   }

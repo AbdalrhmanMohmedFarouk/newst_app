@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
+import 'package:newst_app/features/main/main_screen.dart';
 
 
-import '../main/main_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({super.key});
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -19,9 +20,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
+
   final TextEditingController usernameController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey();
+
   String? errorMessage;
   bool isLoading = false;
 
@@ -33,20 +37,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     await Future.delayed(Duration(seconds: 2));
 
-    final savedEmail = PreferencesManger().getString("user_email");
-    if (savedEmail != null && savedEmail == emailController.text.trim() ) {
+
+    final error = await UserRepository().singUp(email: emailController.text, password: usernameController.text, name: passwordController.text);
+
+    if (error != null ) {
       setState(() {
         errorMessage = "User Already Registered";
         isLoading = false;
       });
-    } else {
-      await PreferencesManger().setString("user_email", emailController.text);
-      await PreferencesManger().setString("username", usernameController.text);
-      await PreferencesManger().setString(
-        "user_password",
-        passwordController.text,
-      );
+      return;
+    }
       await PreferencesManger().setBool("is_logged_in", true);
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -54,10 +56,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             return MainScreen();
           },
         ),
-        (route) => false,
+            (route) => false,
       );
     }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
         child: Padding(
-          padding:  EdgeInsets.all( AppSizes.sizeW(16)),
+          padding: EdgeInsets.all(AppSizes.sizeW(16)),
           child: Form(
             key: _formKey,
             child: Center(
@@ -81,18 +83,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Image.asset("assets/images/logo.png", height:  AppSizes.sizeH(40)),
+                      child: Image.asset(
+                        "assets/images/logo.png",
+                        height: AppSizes.sizeH(40),
+                      ),
                     ),
-                    SizedBox(height:  AppSizes.sizeH(40)),
+                    SizedBox(height: AppSizes.sizeH(40)),
                     Text(
                       "Welcome to Newts",
                       style: TextStyle(
                         color: Color(0XFF363636),
                         fontWeight: FontWeight.w700,
-                        fontSize:  AppSizes.fontSize(20),
+                        fontSize: AppSizes.fontSize(20),
                       ),
                     ),
-                    SizedBox(height:  AppSizes.sizeH(24)),
+                    SizedBox(height: AppSizes.sizeH(24)),
                     CustomTextFormField(
                       controller: usernameController,
                       title: "User Name",
@@ -103,12 +108,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
                         return null;
                       },
-<<<<<<< HEAD
                     ),
                     CustomTextFormField(
-=======
-                    ),CustomTextFormField(
->>>>>>> origin/main
                       controller: emailController,
                       title: "Email",
                       hintText: "Abdalrhman@gmail.com",
@@ -117,7 +118,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return 'Email is required';
                         }
 
-                        final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                        final regex =
+                        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
                         if (!regex.hasMatch(value)) {
                           return 'Enter a valid email';
@@ -126,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height:  AppSizes.sizeH(16)),
+                    SizedBox(height: AppSizes.sizeH(16)),
                     CustomTextFormField(
                       controller: passwordController,
                       title: "Password",
@@ -135,6 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         final passwordRegex = RegExp(
                           r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!]).{8,}$',
                         );
+
                         if (value == null || value.isEmpty) {
                           return 'Password is required';
                         }
@@ -142,11 +145,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (!passwordRegex.hasMatch(value)) {
                           return 'Password must contain 8 characters, uppercase, lowercase, number and special character';
                         }
+
                         return null;
                       },
                       obscureText: true,
                     ),
-                    SizedBox(height:  AppSizes.sizeH(16)),
+                    SizedBox(height: AppSizes.sizeH(16)),
                     CustomTextFormField(
                       controller: confirmPasswordController,
                       title: "Confirm Password",
@@ -155,6 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         final passwordRegex = RegExp(
                           r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!]).{8,}$',
                         );
+
                         if (value == null || value.isEmpty) {
                           return 'Password is required';
                         }
@@ -162,22 +167,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if (!passwordRegex.hasMatch(value)) {
                           return 'Password must contain 8 characters, uppercase, lowercase, number and special character';
                         }
+
                         return null;
                       },
                       obscureText: true,
                     ),
                     if (errorMessage != null)
                       Padding(
-                        padding:  EdgeInsets.symmetric(vertical:  AppSizes.sizeW(8)),
+                        padding: EdgeInsets.symmetric(
+                          vertical: AppSizes.sizeW(8),
+                        ),
                         child: Text(
                           errorMessage!,
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
-                    SizedBox(height:  AppSizes.sizeH(20)),
+                    SizedBox(height: AppSizes.sizeH(20)),
                     SizedBox(
                       width: double.infinity,
-                      height:  AppSizes.sizeH(48),
+                      height: AppSizes.sizeH(48),
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
@@ -189,19 +197,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             : Text("Sign Up"),
                       ),
                     ),
-                    SizedBox(height:  AppSizes.sizeH(24)),
+                    SizedBox(height: AppSizes.sizeH(24)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text("Have an account ?"),
-                        SizedBox(width:  AppSizes.sizeW(8)),
+                        SizedBox(width: AppSizes.sizeW(8)),
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
                           child: Text(
                             "Sign In",
-                            style: TextStyle(color: Theme.of(context).primaryColor),
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                       ],

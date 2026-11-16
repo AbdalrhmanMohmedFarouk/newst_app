@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newst_app/core/constants/app_sizes.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/widgets/custom_text_form_field.dart';
 import 'package:newst_app/features/auth/register_screen.dart';
 
@@ -32,28 +33,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await Future.delayed(Duration(seconds: 2));
 
-    final savedEmail = PreferencesManger().getString("user_email");
-    final savedPassword = PreferencesManger().getString("user_password");
+    // final savedEmail = PreferencesManger().getString("user_email");
+    // final savedPassword = PreferencesManger().getString("user_password");
 
-    if (savedEmail == null || savedPassword == null) {
-      setState(() {
-        errorMessage = "No Account Found Please Register First";
-        isLoading=false;
-      });
-      return;
-    }
-    if(savedEmail != emailController.text || savedPassword != passwordController.text){
-      setState(() {
-        errorMessage = "Incorrect Email or Password";
-        isLoading=false;
-      });
-      return;
-    }
-
+  final String?  error = UserRepository().login(emailController.text, passwordController.text);
+  if(error != null){
     setState(() {
-      errorMessage = null ;
-      isLoading=false;
+      errorMessage = error;
+isLoading=false;
     });
+    return ;
+  }
+
+
+    //
+    // setState(() {
+    //   errorMessage = null ;
+    //   isLoading=false;
+    // });
 
     await PreferencesManger().setBool("is_logged_in", true);
     Navigator.pushReplacement(

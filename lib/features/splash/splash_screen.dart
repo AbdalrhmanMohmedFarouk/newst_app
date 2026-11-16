@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
 import 'package:newst_app/features/auth/login_screen.dart';
 import 'package:newst_app/features/home/home_screen.dart';
 import 'package:newst_app/features/main/main_screen.dart';

@@ -2,7 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppSizes {
 
-  static double sizeH(double size){
+    static double sizeH(double size){
     return size.h ;
   }
   static double sizeW(double size){

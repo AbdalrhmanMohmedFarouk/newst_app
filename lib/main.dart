@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/theme/light_theme.dart';
 import 'package:newst_app/features/splash/splash_screen.dart';
 
@@ -8,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await PreferencesManger().init();
+   UserRepository().init();
 
   runApp(const MyApp());
 }

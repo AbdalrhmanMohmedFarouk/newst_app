@@ -30,3 +30,8 @@ linter:
 
 formater:
   page_width:80
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**

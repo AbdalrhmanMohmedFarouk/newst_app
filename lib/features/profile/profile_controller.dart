@@ -1,7 +1,7 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:newst_app/core/datasource/preferences_manger.dart';
+import 'package:newst_app/core/datasource/local_data/user_repository.dart';
 import 'package:newst_app/core/mixins/safe_notify_mixin.dart';
 
 class ProfileController extends ChangeNotifier with SafeNotify {
@@ -14,35 +14,27 @@ class ProfileController extends ChangeNotifier with SafeNotify {
   String? countryCode;
   String? countryFlag;
 
-
-
   void pickImage(ImageSource source) async {
     selectedImage = await ImagePicker().pickImage(source: source);
     safeNotify();
   }
 
-  getUserData() {
-    userName = PreferencesManger().getString("username") ?? "";
-    countryName = PreferencesManger().getString("countryName") ;
-    countryCode = PreferencesManger().getString("countryCode") ;
-    countryFlag = PreferencesManger().getString("countryFlag") ;
+  getUserData() async {
+    final user = await UserRepository().getUser();
+    userName = user?.name ?? "";
+    countryName = user?.countryName;
+    countryCode = user?.countryCode;
+    countryFlag = user?.countryFlag;
     safeNotify();
   }
 
   saveCountry(Country selectedCountry) async {
-    await PreferencesManger().setString(
-      "countryName",
-      selectedCountry.displayName,
+    await UserRepository().updateUser(
+      countryName: selectedCountry.displayName,
+      countryCode: selectedCountry.countryCode,
+      countryFlag: selectedCountry.flagEmoji,
     );
-    await PreferencesManger().setString(
-      "countryCode",
-      selectedCountry.countryCode,
-    );
-    await PreferencesManger().setString(
-      "countryFlag",
-      selectedCountry.flagEmoji,
-    );
-    countryName = selectedCountry.name;
+    countryName = selectedCountry.displayName;
     countryCode = selectedCountry.countryCode;
     countryFlag = selectedCountry.flagEmoji;
     safeNotify();
